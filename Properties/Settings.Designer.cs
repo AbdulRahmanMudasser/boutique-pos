@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MaqboolFashionPOS.Properties
+namespace MaqboolFashion.Properties
 {
 
 
