@@ -11,7 +11,7 @@ namespace MaqboolFashion.Presentation
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ConnectionTestForm());
+            Application.Run(new SignupForm()); // Start with registration only
         }
     }
 }
