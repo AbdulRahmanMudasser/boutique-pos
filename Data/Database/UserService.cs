@@ -32,6 +32,30 @@ namespace MaqboolFashion.Data.Database
             }
         }
 
+        public bool LoginUser(string email, string password)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                var cmd = new SqlCommand(
+                    "SELECT PasswordHash, Salt FROM Users WHERE Email = @email",
+                    connection);
+
+                cmd.Parameters.AddWithValue("@email", email);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        string storedHash = reader["PasswordHash"].ToString();
+                        string storedSalt = reader["Salt"].ToString();
+                        return PasswordHasher.VerifyHash(password, storedHash, storedSalt);
+                    }
+                    return false; // User not found
+                }
+            }
+        }
+
         public bool RegisterUser(string firstName, string lastName, string email, string password)
         {
             var (hash, salt) = PasswordHasher.CreateHash(password);
