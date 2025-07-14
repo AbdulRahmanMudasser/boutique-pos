@@ -7,21 +7,21 @@ using System.Windows.Forms;
 
 namespace MaqboolFashion.Presentation.Forms
 {
-    public class SignupForm : Form
+    public class LoginForm : Form
     {
         private readonly UserService _userService = new UserService();
         private readonly NavigationService _navigationService;
-        private TextBox txtFirstName, txtLastName, txtEmail, txtPassword, txtConfirmPassword;
+        private TextBox txtEmail, txtPassword;
         private PictureBox eyeIcon;
         private bool passwordVisible = false;
 
-        public SignupForm()
+        public LoginForm()
         {
             // Initialize NavigationService
             _navigationService = NavigationService.Instance(this);
 
             // Form settings
-            this.Text = "MaqboolFashion - Sign Up";
+            this.Text = "MaqboolFashion - Log In";
             this.ClientSize = new Size(1000, 700);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.None;
@@ -33,7 +33,7 @@ namespace MaqboolFashion.Presentation.Forms
 
         private void InitializeUI()
         {
-            // Main container with shadow effect
+            // Main container
             var mainContainer = new Panel
             {
                 BackColor = Color.White,
@@ -68,7 +68,7 @@ namespace MaqboolFashion.Presentation.Forms
             };
             mainContainer.Controls.Add(leftPanel);
 
-            // Right side - Signup Form
+            // Right side - Login Form
             var rightPanel = new Panel
             {
                 BackColor = Color.White,
@@ -137,7 +137,7 @@ namespace MaqboolFashion.Presentation.Forms
                     brandContent.Controls.Add(logo);
                 }
 
-                // Brand name - Made more visible
+                // Brand name
                 var lblBrand = new Label
                 {
                     Text = "MAQBOOL FASHION",
@@ -159,7 +159,7 @@ namespace MaqboolFashion.Presentation.Forms
             // Form header
             var lblWelcome = new Label
             {
-                Text = "CREATE ACCOUNT",
+                Text = "LOG IN",
                 Font = new Font("Segoe UI", 24, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
@@ -169,7 +169,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             var lblSubtitle = new Label
             {
-                Text = "Join Maqbool Fashion's exclusive community",
+                Text = "Welcome back to Maqbool Fashion",
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Gray,
                 AutoSize = true,
@@ -183,48 +183,6 @@ namespace MaqboolFashion.Presentation.Forms
             var fieldPadding = 15;
             var startY = 130;
 
-            // First Name Label
-            var lblFirstName = new Label
-            {
-                Text = "First Name",
-                Font = new Font("Segoe UI", 9),
-                ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(50, startY)
-            };
-            panel.Controls.Add(lblFirstName);
-
-            // First Name Field
-            txtFirstName = new TextBox
-            {
-                Font = new Font("Segoe UI", 10),
-                Size = new Size(fieldWidth, fieldHeight),
-                Location = new Point(50, startY + 20),
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            panel.Controls.Add(txtFirstName);
-
-            // Last Name Label
-            var lblLastName = new Label
-            {
-                Text = "Last Name",
-                Font = new Font("Segoe UI", 9),
-                ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(50, startY + fieldHeight + 20 + 5)
-            };
-            panel.Controls.Add(lblLastName);
-
-            // Last Name Field
-            txtLastName = new TextBox
-            {
-                Font = new Font("Segoe UI", 10),
-                Size = new Size(fieldWidth, fieldHeight),
-                Location = new Point(50, startY + fieldHeight + 40 + 5),
-                BorderStyle = BorderStyle.FixedSingle
-            };
-            panel.Controls.Add(txtLastName);
-
             // Email Label
             var lblEmail = new Label
             {
@@ -232,7 +190,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Font = new Font("Segoe UI", 9),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 2 + 20)
+                Location = new Point(50, startY)
             };
             panel.Controls.Add(lblEmail);
 
@@ -241,7 +199,7 @@ namespace MaqboolFashion.Presentation.Forms
             {
                 Font = new Font("Segoe UI", 10),
                 Size = new Size(fieldWidth, fieldHeight),
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 2 + 40),
+                Location = new Point(50, startY + 20),
                 BorderStyle = BorderStyle.FixedSingle
             };
             panel.Controls.Add(txtEmail);
@@ -253,7 +211,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Font = new Font("Segoe UI", 9),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 3 + 20)
+                Location = new Point(50, startY + fieldHeight + 20 + fieldPadding)
             };
             panel.Controls.Add(lblPassword);
 
@@ -262,39 +220,17 @@ namespace MaqboolFashion.Presentation.Forms
             {
                 Font = new Font("Segoe UI", 10),
                 Size = new Size(fieldWidth, fieldHeight),
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 3 + 40),
+                Location = new Point(50, startY + fieldHeight + 40 + fieldPadding),
                 BorderStyle = BorderStyle.FixedSingle,
                 PasswordChar = '•'
             };
             panel.Controls.Add(txtPassword);
 
-            // Confirm Password Label
-            var lblConfirmPassword = new Label
-            {
-                Text = "Confirm Password",
-                Font = new Font("Segoe UI", 9),
-                ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 4 + 20)
-            };
-            panel.Controls.Add(lblConfirmPassword);
-
-            // Confirm Password Field
-            txtConfirmPassword = new TextBox
-            {
-                Font = new Font("Segoe UI", 10),
-                Size = new Size(fieldWidth, fieldHeight),
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 4 + 40),
-                BorderStyle = BorderStyle.FixedSingle,
-                PasswordChar = '•'
-            };
-            panel.Controls.Add(txtConfirmPassword);
-
             // Eye icon for password visibility
             eyeIcon = new PictureBox
             {
                 Size = new Size(24, 24),
-                Location = new Point(410, startY + (fieldHeight + fieldPadding) * 3 + 48),
+                Location = new Point(410, startY + fieldHeight + 48 + fieldPadding),
                 Cursor = Cursors.Hand,
                 BackColor = Color.White
             };
@@ -302,47 +238,47 @@ namespace MaqboolFashion.Presentation.Forms
             eyeIcon.Click += (s, e) => TogglePasswordVisibility();
             panel.Controls.Add(eyeIcon);
 
-            // Create Account Button
-            var btnCreateAccount = new Button
+            // Log In Button
+            var btnLogin = new Button
             {
-                Text = "CREATE ACCOUNT",
+                Text = "LOG IN",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 Size = new Size(fieldWidth, 50),
-                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 5 + 40),
+                Location = new Point(50, startY + (fieldHeight + fieldPadding) * 2 + 40),
                 BackColor = Color.Black,
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
-            btnCreateAccount.FlatAppearance.BorderSize = 0;
-            btnCreateAccount.FlatAppearance.MouseOverBackColor = Color.FromArgb(70, 70, 70);
-            btnCreateAccount.Click += BtnCreateAccount_Click;
-            panel.Controls.Add(btnCreateAccount);
+            btnLogin.FlatAppearance.BorderSize = 0;
+            btnLogin.FlatAppearance.MouseOverBackColor = Color.FromArgb(70, 70, 70);
+            btnLogin.Click += BtnLogin_Click;
+            panel.Controls.Add(btnLogin);
 
-            // Already have account - made more visible
-            var lblHaveAccount = new Label
+            // Don't have an account
+            var lblNoAccount = new Label
             {
-                Text = "Already have an account?",
+                Text = "Don't have an account?",
                 Font = new Font("Segoe UI", 10, FontStyle.Regular),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(120, startY + (fieldHeight + fieldPadding) * 5 + 110)
+                Location = new Point(120, startY + (fieldHeight + fieldPadding) * 2 + 110)
             };
-            panel.Controls.Add(lblHaveAccount);
+            panel.Controls.Add(lblNoAccount);
 
-            // Sign In link - made more prominent
-            var linkSignIn = new LinkLabel
+            // Sign Up link
+            var linkSignUp = new LinkLabel
             {
-                Text = "SIGN IN",
+                Text = "SIGN UP",
                 Font = new Font("Segoe UI", 10, FontStyle.Bold),
                 LinkColor = Color.Black,
                 ActiveLinkColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(280, startY + (fieldHeight + fieldPadding) * 5 + 110),
+                Location = new Point(280, startY + (fieldHeight + fieldPadding) * 2 + 110),
                 Cursor = Cursors.Hand
             };
-            linkSignIn.Click += (s, e) => _navigationService.ShowLoginForm();
-            panel.Controls.Add(linkSignIn);
+            linkSignUp.Click += (s, e) => _navigationService.ShowSignupForm();
+            panel.Controls.Add(linkSignUp);
         }
 
         private void UpdateEyeIcon()
@@ -361,7 +297,6 @@ namespace MaqboolFashion.Presentation.Forms
             catch { }
 
             // Fallback to drawn icon
-
             var bmp = new Bitmap(24, 24);
             using (var g = Graphics.FromImage(bmp))
             {
@@ -379,20 +314,27 @@ namespace MaqboolFashion.Presentation.Forms
         {
             passwordVisible = !passwordVisible;
             txtPassword.PasswordChar = passwordVisible ? '\0' : '•';
-            txtConfirmPassword.PasswordChar = passwordVisible ? '\0' : '•';
             UpdateEyeIcon();
         }
 
-        private void BtnCreateAccount_Click(object sender, EventArgs e)
+        private void InitializeComponent()
         {
-            // Validate First Name and Last Name
-            if (string.IsNullOrWhiteSpace(txtFirstName.Text) || string.IsNullOrWhiteSpace(txtLastName.Text))
-            {
-                MessageBox.Show("Please enter your first and last name", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtFirstName.Focus();
-                return;
-            }
+            this.SuspendLayout();
+            // 
+            // LoginForm
+            // 
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.Name = "LoginForm";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
+            this.ResumeLayout(false);
+        }
 
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void BtnLogin_Click(object sender, EventArgs e)
+        {
             // Validate Email Format
             string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (string.IsNullOrWhiteSpace(txtEmail.Text) || !Regex.IsMatch(txtEmail.Text, emailPattern))
@@ -402,65 +344,36 @@ namespace MaqboolFashion.Presentation.Forms
                 return;
             }
 
-            // Check if User Already Exists
-            try
-            {
-                if (_userService.CheckUserExists(txtEmail.Text))
-                {
-                    MessageBox.Show("An account with this email already exists", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtEmail.Focus();
-                    return;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error checking user existence: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             // Validate Password
-            string passwordPattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$";
-            if (!Regex.IsMatch(txtPassword.Text, passwordPattern))
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*)", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter your password", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPassword.Focus();
                 return;
             }
 
-            // Validate Confirm Password
-            if (txtPassword.Text != txtConfirmPassword.Text)
-            {
-                MessageBox.Show("Passwords do not match", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtPassword.Focus();
-                return;
-            }
-
-            // Register User
+            // Attempt Login
             try
             {
-                bool success = _userService.RegisterUser(
-                    txtFirstName.Text,
-                    txtLastName.Text,
-                    txtEmail.Text,
-                    txtPassword.Text);
-
+                bool success = _userService.LoginUser(txtEmail.Text, txtPassword.Text);
                 if (success)
                 {
-                    MessageBox.Show("Account created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Login successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // Clear form
-                    txtFirstName.Clear();
-                    txtLastName.Clear();
                     txtEmail.Clear();
                     txtPassword.Clear();
-                    txtConfirmPassword.Clear();
-                    txtFirstName.Focus();
-                    // Navigate to LoginForm after successful registration
-                    _navigationService.ShowLoginForm();
+                    txtEmail.Focus();
+                    // TODO: Navigate to main application
+                }
+                else
+                {
+                    MessageBox.Show("Invalid email or password", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtPassword.Focus();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Registration failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Login failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
