@@ -22,7 +22,7 @@ namespace MaqboolFashion.Data.Security
             }
         }
 
-        public static bool Verify(string password, string storedHash, string storedSalt)
+        public static bool VerifyHash(string password, string storedHash, string storedSalt)
         {
             byte[] salt = Convert.FromBase64String(storedSalt);
             using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000))
