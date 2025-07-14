@@ -10,12 +10,16 @@ namespace MaqboolFashion.Presentation.Forms
     public class SignupForm : Form
     {
         private readonly UserService _userService = new UserService();
+        private readonly NavigationService _navigationService;
         private TextBox txtFirstName, txtLastName, txtEmail, txtPassword, txtConfirmPassword;
         private PictureBox eyeIcon;
         private bool passwordVisible = false;
 
         public SignupForm()
         {
+            // Initialize NavigationService
+            _navigationService = NavigationService.Instance(this);
+
             // Form settings
             this.Text = "MaqboolFashion - Sign Up";
             this.ClientSize = new Size(1000, 700);
@@ -52,7 +56,7 @@ namespace MaqboolFashion.Presentation.Forms
             };
             btnExit.FlatAppearance.BorderSize = 0;
             btnExit.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
-            btnExit.Click += (s, e) => Application.Exit();
+            btnExit.Click += (s, e) => _navigationService.ExitApplication();
             mainContainer.Controls.Add(btnExit);
 
             // Left side - Branding with background image
@@ -337,12 +341,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Location = new Point(280, startY + (fieldHeight + fieldPadding) * 5 + 110),
                 Cursor = Cursors.Hand
             };
-            linkSignIn.Click += (s, e) =>
-            {
-                //var loginForm = new LoginForm();
-                //loginForm.Show();
-                //this.Hide();
-            };
+            linkSignIn.Click += (s, e) => _navigationService.ShowLoginForm();
             panel.Controls.Add(linkSignIn);
         }
 
@@ -362,6 +361,7 @@ namespace MaqboolFashion.Presentation.Forms
             catch { }
 
             // Fallback to drawn icon
+
             var bmp = new Bitmap(24, 24);
             using (var g = Graphics.FromImage(bmp))
             {
@@ -394,7 +394,7 @@ namespace MaqboolFashion.Presentation.Forms
             }
 
             // Validate Email Format
-            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$"; // Basic email regex
+            string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (string.IsNullOrWhiteSpace(txtEmail.Text) || !Regex.IsMatch(txtEmail.Text, emailPattern))
             {
                 MessageBox.Show("Please enter a valid email address (e.g., user@domain.com)", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -454,6 +454,8 @@ namespace MaqboolFashion.Presentation.Forms
                     txtPassword.Clear();
                     txtConfirmPassword.Clear();
                     txtFirstName.Focus();
+                    // Navigate to LoginForm after successful registration
+                    _navigationService.ShowLoginForm();
                 }
             }
             catch (Exception ex)
