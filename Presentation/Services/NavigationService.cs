@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace MaqboolFashion.Presentation.Services
@@ -94,53 +95,92 @@ namespace MaqboolFashion.Presentation.Services
         {
             if (newForm == null) return;
 
-            // Close and dispose of the current form properly
-            if (_currentForm != null && _currentForm != newForm)
+            // Fade out the current form if it exists
+            if (_currentForm != null && _currentForm != newForm && !_currentForm.IsDisposed)
             {
-                var formToClose = _currentForm;
-                _currentForm = null;
-
-                // Show new form first
-                newForm.Opacity = 0;
-                newForm.Show();
-
-                // Animate new form in
-                var fadeInTimer = new Timer { Interval = 10 };
-                int opacity = 0;
-
-                fadeInTimer.Tick += (s, e) =>
+                try
                 {
-                    opacity += 5;
-                    newForm.Opacity = opacity / 100.0;
+                    var fadeOutTimer = new Timer { Interval = 10 };
+                    int opacity = 100;
 
-                    if (opacity >= 100)
+                    fadeOutTimer.Tick += (s, e) =>
                     {
-                        fadeInTimer.Stop();
-                        fadeInTimer.Dispose();
-
-                        // Close and dispose old form after animation
-                        try
+                        opacity -= 5;
+                        if (_currentForm.InvokeRequired)
                         {
-                            if (formToClose != null && !formToClose.IsDisposed)
-                            {
-                                formToClose.Hide();
-                                formToClose.Close();
-                                formToClose.Dispose();
-                            }
+                            _currentForm.Invoke(new Action(() => _currentForm.Opacity = opacity / 100.0));
                         }
-                        catch { }
-                    }
-                };
+                        else
+                        {
+                            _currentForm.Opacity = opacity / 100.0;
+                        }
 
-                fadeInTimer.Start();
+                        if (opacity <= 0)
+                        {
+                            fadeOutTimer.Stop();
+                            fadeOutTimer.Dispose();
+
+                            // Close and dispose of the current form
+                            if (_currentForm.InvokeRequired)
+                            {
+                                _currentForm.Invoke(new Action(() =>
+                                {
+                                    _currentForm.Close();
+                                    _currentForm.Dispose();
+                                }));
+                            }
+                            else
+                            {
+                                _currentForm.Close();
+                                _currentForm.Dispose();
+                            }
+
+                            // Show the new form with fade-in
+                            ShowNewFormWithFadeIn(newForm);
+                        }
+                    };
+
+                    fadeOutTimer.Start();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error closing previous form: {ex.Message}", "Navigation Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // Fallback: show new form without animation
+                    ShowNewFormWithFadeIn(newForm);
+                }
             }
             else
             {
-                newForm.Show();
+                // No current form, show new form directly
+                ShowNewFormWithFadeIn(newForm);
             }
+        }
 
+        private void ShowNewFormWithFadeIn(Form newForm)
+        {
+            newForm.Opacity = 0;
+            newForm.Show();
             _currentForm = newForm;
             _instance._currentForm = newForm;
+
+            // Fade in the new form
+            var fadeInTimer = new Timer { Interval = 10 };
+            int opacity = 0;
+
+            fadeInTimer.Tick += (s, e) =>
+            {
+                opacity += 5;
+                newForm.Opacity = opacity / 100.0;
+
+                if (opacity >= 100)
+                {
+                    fadeInTimer.Stop();
+                    fadeInTimer.Dispose();
+                }
+            };
+
+            fadeInTimer.Start();
         }
 
         public void ExitApplication()
@@ -152,7 +192,7 @@ namespace MaqboolFashion.Presentation.Services
 
                 if (result == DialogResult.Yes)
                 {
-                    foreach (Form openForm in Application.OpenForms)
+                    foreach (Form openForm in Application.OpenForms.Cast<Form>().ToList())
                     {
                         if (openForm.InvokeRequired)
                         {
@@ -163,7 +203,6 @@ namespace MaqboolFashion.Presentation.Services
                             openForm.Close();
                         }
                     }
-
                     Application.Exit();
                 }
             }
@@ -171,7 +210,6 @@ namespace MaqboolFashion.Presentation.Services
             {
                 MessageBox.Show($"Error closing application: {ex.Message}", "Exit Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 Environment.Exit(0);
             }
         }
@@ -185,25 +223,18 @@ namespace MaqboolFashion.Presentation.Services
         {
             try
             {
-                var formsToClose = new System.Collections.Generic.List<Form>();
-
-                foreach (Form openForm in Application.OpenForms)
+                foreach (Form openForm in Application.OpenForms.Cast<Form>().ToList())
                 {
-                    if (openForm != exceptForm)
+                    if (openForm != exceptForm && !openForm.IsDisposed)
                     {
-                        formsToClose.Add(openForm);
-                    }
-                }
-
-                foreach (var form in formsToClose)
-                {
-                    if (form.InvokeRequired)
-                    {
-                        form.Invoke(new Action(() => form.Close()));
-                    }
-                    else
-                    {
-                        form.Close();
+                        if (openForm.InvokeRequired)
+                        {
+                            openForm.Invoke(new Action(() => openForm.Close()));
+                        }
+                        else
+                        {
+                            openForm.Close();
+                        }
                     }
                 }
             }
@@ -218,7 +249,7 @@ namespace MaqboolFashion.Presentation.Services
         {
             try
             {
-                if (_currentForm != null)
+                if (_currentForm != null && !_currentForm.IsDisposed)
                 {
                     _currentForm.Refresh();
                 }
@@ -234,7 +265,7 @@ namespace MaqboolFashion.Presentation.Services
         {
             try
             {
-                if (_currentForm != null)
+                if (_currentForm != null && !_currentForm.IsDisposed)
                 {
                     _currentForm.WindowState = FormWindowState.Minimized;
                 }
@@ -250,7 +281,7 @@ namespace MaqboolFashion.Presentation.Services
         {
             try
             {
-                if (_currentForm != null)
+                if (_currentForm != null && !_currentForm.IsDisposed)
                 {
                     _currentForm.WindowState = FormWindowState.Normal;
                     _currentForm.BringToFront();
