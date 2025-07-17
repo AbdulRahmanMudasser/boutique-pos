@@ -447,6 +447,22 @@ namespace MaqboolFashion.Presentation.Forms
             lblPasswordStrength.ForeColor = strengthColor;
         }
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // SignupForm
+            // 
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.Name = "SignupForm";
+            this.Load += new System.EventHandler(this.SignupForm_Load);
+            this.ResumeLayout(false);
+        }
+
+        private void SignupForm_Load(object sender, EventArgs e)
+        {
+        }
+
         private void UpdateEyeIcon(PictureBox eyeIconParam, bool visible)
         {
             if (eyeIconParam == null) return;
@@ -523,22 +539,7 @@ namespace MaqboolFashion.Presentation.Forms
 
         private void AnimateToLoginForm()
         {
-            var fadeTimer = new Timer { Interval = 10 };
-            int currentOpacity = 100;
-
-            fadeTimer.Tick += (s, e) =>
-            {
-                currentOpacity -= 5;
-                this.Opacity = currentOpacity / 100.0;
-
-                if (currentOpacity <= 0)
-                {
-                    fadeTimer.Stop();
-                    _navigationService.ShowLoginForm();
-                }
-            };
-
-            fadeTimer.Start();
+            _navigationService.ShowLoginForm();
         }
 
         private async void BtnCreateAccount_Click(object sender, EventArgs e)

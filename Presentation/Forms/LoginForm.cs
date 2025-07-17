@@ -474,22 +474,7 @@ namespace MaqboolFashion.Presentation.Forms
 
         private void AnimateToSignupForm()
         {
-            var fadeTimer = new Timer { Interval = 10 };
-            int currentOpacity = 100;
-
-            fadeTimer.Tick += (s, e) =>
-            {
-                currentOpacity -= 5;
-                this.Opacity = currentOpacity / 100.0;
-
-                if (currentOpacity <= 0)
-                {
-                    fadeTimer.Stop();
-                    _navigationService.ShowSignupForm();
-                }
-            };
-
-            fadeTimer.Start();
+            _navigationService.ShowSignupForm();
         }
 
         private void LoadRememberedCredentials()
@@ -584,6 +569,22 @@ namespace MaqboolFashion.Presentation.Forms
             {
                 SetProcessingState(false);
             }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // LoginForm
+            // 
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.Name = "LoginForm";
+            this.Load += new System.EventHandler(this.LoginForm_Load);
+            this.ResumeLayout(false);
+        }
+
+        private void LoginForm_Load(object sender, EventArgs e)
+        {
         }
 
         protected override void Dispose(bool disposing)
