@@ -1,5 +1,6 @@
 ﻿using MaqboolFashion.Data.Database;
 using MaqboolFashion.Presentation.Services;
+using MaqboolFashion.Presentation.Components;
 using System;
 using System.Drawing;
 using System.IO;
@@ -12,6 +13,7 @@ namespace MaqboolFashion.Presentation.Forms
     {
         private readonly UserService _userService = new UserService();
         private readonly NavigationService _navigationService;
+        private HeaderComponent headerComponent;
         private TextBox txtEmail, txtPassword;
         private PictureBox eyeIcon;
         private CheckBox chkRememberMe;
@@ -58,11 +60,17 @@ namespace MaqboolFashion.Presentation.Forms
 
         private void InitializeUI()
         {
+            // Add HeaderComponent
+            headerComponent = new HeaderComponent("MAQBOOL FASHION - SIGN IN");
+            headerComponent.ExitClicked += (s, e) => _navigationService.ExitApplication();
+            headerComponent.MinimizeClicked += (s, e) => this.WindowState = FormWindowState.Minimized;
+            this.Controls.Add(headerComponent);
+
             var mainContainer = new Panel
             {
                 BackColor = Color.White,
                 Size = new Size(900, 600),
-                Location = new Point(50, 50),
+                Location = new Point(50, headerComponent.GetHeaderHeight() + 10),
                 BorderStyle = BorderStyle.None
             };
 
@@ -73,14 +81,6 @@ namespace MaqboolFashion.Presentation.Forms
             };
 
             this.Controls.Add(mainContainer);
-
-            var btnExit = CreateModernButton("×", new Point(mainContainer.Width - 45, 5), new Size(40, 40));
-            btnExit.Font = new Font("Segoe UI", 16, FontStyle.Bold);
-            btnExit.ForeColor = Color.FromArgb(120, 120, 120);
-            btnExit.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 100, 100);
-            btnExit.FlatAppearance.MouseDownBackColor = Color.FromArgb(255, 80, 80);
-            btnExit.Click += (s, e) => _navigationService.ExitApplication();
-            mainContainer.Controls.Add(btnExit);
 
             var leftPanel = new Panel
             {
@@ -103,20 +103,6 @@ namespace MaqboolFashion.Presentation.Forms
 
             LoadEnhancedBrandingSection(leftPanel);
             CreateEnhancedFormElements(rightPanel);
-        }
-
-        private Button CreateModernButton(string text, Point location, Size size)
-        {
-            return new Button
-            {
-                Text = text,
-                Location = location,
-                Size = size,
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.Transparent,
-                Cursor = Cursors.Hand,
-                Font = new Font("Segoe UI", 10, FontStyle.Regular)
-            };
         }
 
         private void LoadEnhancedBrandingSection(Panel panel)

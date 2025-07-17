@@ -173,35 +173,87 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Database\CategoryService.cs" />
     <Compile Include="Data\Database\DatabaseService.cs" />
     <Compile Include="Data\Database\UserService.cs" />
     <Compile Include="Data\Security\PasswordHasher.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Presentation\Components\BaseFormComponent.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\Components\DashboardCardComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Presentation\Components\HeaderComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Presentation\Components\PaginationComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Presentation\Components\SidebarComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Presentation\Forms\CategoriesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\Forms\CategoryFormDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Presentation\Forms\ConnectionTestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\Forms\DashboardForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentation\Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentation\Forms\NavigationForm.cs" />
     <Compile Include="Presentation\Forms\SignupForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Presentation\Services\NavigationService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Components\BaseFormComponent.resx">
+      <DependentUpon>BaseFormComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Components\DashboardCardComponent.resx">
+      <DependentUpon>DashboardCardComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Components\HeaderComponent.resx">
+      <DependentUpon>HeaderComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Components\PaginationComponent.resx">
+      <DependentUpon>PaginationComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Components\SidebarComponent.resx">
+      <DependentUpon>SidebarComponent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Forms\CategoriesForm.resx">
+      <DependentUpon>CategoriesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Forms\CategoryFormDialog.resx">
+      <DependentUpon>CategoryFormDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\Forms\ConnectionTestForm.resx">
       <DependentUpon>ConnectionTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Forms\DashboardForm.resx">
+      <DependentUpon>DashboardForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\Forms\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\Forms\SignupForm.resx">
       <DependentUpon>SignupForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\Services\NavigationService.resx">
+      <DependentUpon>NavigationService.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

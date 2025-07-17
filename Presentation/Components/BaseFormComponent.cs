@@ -142,5 +142,23 @@ namespace MaqboolFashion.Presentation.Components
                 CreatePageContent();
             }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // BaseFormComponent
+            // 
+            this.ClientSize = new System.Drawing.Size(282, 253);
+            this.Name = "BaseFormComponent";
+            this.Load += new System.EventHandler(this.BaseFormComponent_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        private void BaseFormComponent_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
