@@ -74,6 +74,8 @@ namespace MaqboolFashion.Presentation.Components
                 new { Text = "Dashboard", Icon = "🏠" },
                 new { Text = "Categories", Icon = "🗂️" },
                 new { Text = "Products", Icon = "📦" },
+                new { Text = "Labor", Icon = "👷" },
+                new { Text = "Payment", Icon = "💳" },
                 new { Text = "Sales", Icon = "💰" },
                 new { Text = "Expenses", Icon = "💸" },
                 new { Text = "Stock", Icon = "📊" },

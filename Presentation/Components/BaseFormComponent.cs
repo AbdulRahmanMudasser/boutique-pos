@@ -96,23 +96,47 @@ namespace MaqboolFashion.Presentation.Components
                 case "categories":
                     navigationService.ShowCategoriesForm();
                     break;
+                case "labor":
+                    navigationService.ShowLaborForm();
+                    break;
+                case "payment":
+                    // navigationService.ShowPaymentForm(); // TODO: Create payment form
+                    MessageBox.Show("Payment management coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
                 case "products":
-                    // navigationService.ShowProductsForm();
+                    // navigationService.ShowProductsForm(); // TODO: Create products form
+                    MessageBox.Show("Products management coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case "sales":
-                    // navigationService.ShowSalesForm();
+                    // navigationService.ShowSalesForm(); // TODO: Create sales form
+                    MessageBox.Show("Sales management coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case "expenses":
-                    // navigationService.ShowExpensesForm();
+                    // navigationService.ShowExpensesForm(); // TODO: Create expenses form
+                    MessageBox.Show("Expenses management coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case "stock":
-                    // navigationService.ShowStockForm();
+                    // navigationService.ShowStockForm(); // TODO: Create stock form
+                    MessageBox.Show("Stock management coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case "reports":
-                    // navigationService.ShowReportsForm();
+                    // navigationService.ShowReportsForm(); // TODO: Create reports form
+                    MessageBox.Show("Reports coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case "settings":
-                    // navigationService.ShowSettingsForm();
+                    // navigationService.ShowSettingsForm(); // TODO: Create settings form
+                    MessageBox.Show("Settings coming soon!", "Coming Soon",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                default:
+                    MessageBox.Show($"Navigation for {menuItem} not implemented yet.", "Info",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
             }
         }
