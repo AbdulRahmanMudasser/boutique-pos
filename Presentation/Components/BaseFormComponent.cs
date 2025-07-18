@@ -100,9 +100,9 @@ namespace MaqboolFashion.Presentation.Components
                     navigationService.ShowLaborForm();
                     break;
                 case "payment":
-                    // navigationService.ShowPaymentForm(); // TODO: Create payment form
-                    MessageBox.Show("Payment management coming soon!", "Coming Soon",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //navigationService.ShowPaymentForm();
+                    MessageBox.Show("Payments management coming soon!", "Coming Soon",
+    MessageBoxButtons.OK, MessageBoxIcon.Information);
                     break;
                 case "products":
                     // navigationService.ShowProductsForm(); // TODO: Create products form
