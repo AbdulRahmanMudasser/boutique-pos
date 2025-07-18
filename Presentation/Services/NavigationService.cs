@@ -105,6 +105,20 @@ namespace MaqboolFashion.Presentation.Services
             }
         }
 
+        //public void ShowPaymentForm()
+        //{
+        //    try
+        //    {
+        //        var paymentForm = new Forms.PaymentForm();
+        //        NavigateToForm(paymentForm);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Error navigating to Payment form: {ex.Message}", "Navigation Error",
+        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
+
         private void NavigateToForm(Form newForm)
         {
             if (newForm == null) return;
