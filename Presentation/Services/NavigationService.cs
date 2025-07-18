@@ -105,19 +105,24 @@ namespace MaqboolFashion.Presentation.Services
             }
         }
 
-        //public void ShowPaymentForm()
-        //{
-        //    try
-        //    {
-        //        var paymentForm = new Forms.PaymentForm();
-        //        NavigateToForm(paymentForm);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error navigating to Payment form: {ex.Message}", "Navigation Error",
-        //            MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
+        public void ShowPaymentForm()
+        {
+            try
+            {
+                // TODO: Create PaymentForm once it's implemented
+                MessageBox.Show("Payment module coming soon!", "Coming Soon",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // When PaymentForm is created, uncomment this:
+                // var paymentForm = new Forms.PaymentForm();
+                // NavigateToForm(paymentForm);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error navigating to Payment form: {ex.Message}", "Navigation Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void NavigateToForm(Form newForm)
         {

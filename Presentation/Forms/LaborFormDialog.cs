@@ -2,7 +2,6 @@
 using System;
 using System.Drawing;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace MaqboolFashion.Presentation.Forms
@@ -14,18 +13,17 @@ namespace MaqboolFashion.Presentation.Forms
         private TextBox txtCity;
         private TextBox txtPhoneNumber;
         private TextBox txtCNIC;
-        private TextBox txtCaste;
         private NumericUpDown numCost;
         private DateTimePicker dtpJoiningDate;
         private PictureBox picProfile;
-        private Button btnUploadImage;
+        private Button btnBrowseImage;
         private Button btnSave;
         private Button btnCancel;
         private Label lblTitle;
         private LaborService laborService;
         private LaborService.Labor editingLabor;
         private bool isEditMode;
-        private string selectedImagePath;
+        private string selectedImagePath = "";
 
         public bool IsSuccess { get; private set; }
 
@@ -46,8 +44,8 @@ namespace MaqboolFashion.Presentation.Forms
 
         private void InitializeDialog()
         {
-            this.Text = isEditMode ? "Edit Worker" : "Add Worker";
-            this.Size = new Size(600, 700);
+            this.Text = isEditMode ? "Edit Labor" : "Add Labor";
+            this.Size = new Size(600, 620);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -60,82 +58,28 @@ namespace MaqboolFashion.Presentation.Forms
         {
             lblTitle = new Label
             {
-                Text = isEditMode ? "Edit Worker Details" : "Add New Worker",
-                Font = new Font("Segoe UI", 18, FontStyle.Bold),
+                Text = isEditMode ? "Edit Labor Information" : "Add New Labor",
+                Font = new Font("Segoe UI", 16, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(30, 20)
             };
 
-            // Profile Image Section
-            var profileLabel = new Label
-            {
-                Text = "Profile Picture",
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(30, 60)
-            };
-
-            picProfile = new PictureBox
-            {
-                Size = new Size(120, 120),
-                Location = new Point(30, 85),
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.FromArgb(248, 249, 250),
-                SizeMode = PictureBoxSizeMode.StretchImage
-            };
-
-            // Set default image
-            try
-            {
-                // Create a simple default profile image
-                var defaultBitmap = new Bitmap(120, 120);
-                using (Graphics g = Graphics.FromImage(defaultBitmap))
-                {
-                    g.Clear(Color.FromArgb(240, 240, 240));
-                    using (var brush = new SolidBrush(Color.Gray))
-                    {
-                        var font = new Font("Segoe UI", 12);
-                        var text = "👤";
-                        var size = g.MeasureString(text, font);
-                        g.DrawString(text, font, brush,
-                            (120 - size.Width) / 2, (120 - size.Height) / 2);
-                    }
-                }
-                picProfile.Image = defaultBitmap;
-            }
-            catch { }
-
-            btnUploadImage = new Button
-            {
-                Text = "Upload Photo",
-                Font = new Font("Segoe UI", 9),
-                Size = new Size(120, 30),
-                Location = new Point(30, 215),
-                FlatStyle = FlatStyle.Flat,
-                BackColor = Color.FromArgb(108, 117, 125),
-                ForeColor = Color.White,
-                Cursor = Cursors.Hand
-            };
-            btnUploadImage.FlatAppearance.BorderSize = 0;
-            btnUploadImage.Click += BtnUploadImage_Click;
-
-            // Form Fields - Left Column
+            // Left Column
             var lblName = new Label
             {
                 Text = "Full Name *",
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(180, 85)
+                Location = new Point(30, 70)
             };
 
             txtName = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(350, 30),
-                Location = new Point(180, 110),
+                Size = new Size(200, 30),
+                Location = new Point(30, 95),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black
@@ -147,14 +91,14 @@ namespace MaqboolFashion.Presentation.Forms
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(180, 150)
+                Location = new Point(30, 140)
             };
 
             txtArea = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(170, 30),
-                Location = new Point(180, 175),
+                Size = new Size(200, 30),
+                Location = new Point(30, 165),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black
@@ -166,97 +110,76 @@ namespace MaqboolFashion.Presentation.Forms
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(360, 150)
+                Location = new Point(30, 210)
             };
 
             txtCity = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(170, 30),
-                Location = new Point(360, 175),
+                Size = new Size(200, 30),
+                Location = new Point(30, 235),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black
             };
 
-            var lblPhone = new Label
+            var lblPhoneNumber = new Label
             {
                 Text = "Phone Number *",
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 270)
+                Location = new Point(30, 280)
             };
 
             txtPhoneNumber = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(250, 30),
-                Location = new Point(30, 295),
+                Size = new Size(200, 30),
+                Location = new Point(30, 305),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
-                MaxLength = 11
             };
 
             var lblCNIC = new Label
             {
-                Text = "CNIC Number * (13 digits)",
+                Text = "CNIC Number *",
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(290, 270)
+                Location = new Point(30, 350)
             };
 
             txtCNIC = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(240, 30),
-                Location = new Point(290, 295),
+                Size = new Size(200, 30),
+                Location = new Point(30, 375),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
-                MaxLength = 13
-            };
-
-            var lblCaste = new Label
-            {
-                Text = "Caste",
-                Font = new Font("Segoe UI", 10),
-                ForeColor = Color.Black,
-                AutoSize = true,
-                Location = new Point(30, 335)
-            };
-
-            txtCaste = new TextBox
-            {
-                Font = new Font("Segoe UI", 11),
-                Size = new Size(250, 30),
-                Location = new Point(30, 360),
-                BorderStyle = BorderStyle.FixedSingle,
-                BackColor = Color.White,
-                ForeColor = Color.Black
             };
 
             var lblCost = new Label
             {
-                Text = "Monthly/Daily Cost (Rs.) *",
+                Text = "Daily Cost (Rs.) *",
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(290, 335)
+                Location = new Point(30, 420)
             };
 
             numCost = new NumericUpDown
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(240, 30),
-                Location = new Point(290, 360),
+                Size = new Size(200, 30),
+                Location = new Point(30, 445),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
-                Maximum = 999999,
                 Minimum = 0,
+                Maximum = 999999,
                 DecimalPlaces = 0,
                 ThousandsSeparator = true
             };
@@ -267,41 +190,94 @@ namespace MaqboolFashion.Presentation.Forms
                 Font = new Font("Segoe UI", 10),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 400)
+                Location = new Point(30, 490)
             };
 
             dtpJoiningDate = new DateTimePicker
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(250, 30),
-                Location = new Point(30, 425),
+                Size = new Size(200, 30),
+                Location = new Point(30, 515),
                 Format = DateTimePickerFormat.Short,
                 Value = DateTime.Now
             };
+
+            // Right Column - Profile Picture
+            var lblProfilePicture = new Label
+            {
+                Text = "Profile Picture",
+                Font = new Font("Segoe UI", 10),
+                ForeColor = Color.Black,
+                AutoSize = true,
+                Location = new Point(300, 70)
+            };
+
+            picProfile = new PictureBox
+            {
+                Size = new Size(200, 200),
+                Location = new Point(300, 95),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.FromArgb(248, 249, 250),
+                SizeMode = PictureBoxSizeMode.StretchImage
+            };
+
+            // Default profile icon
+            picProfile.Paint += (s, e) =>
+            {
+                if (picProfile.Image == null)
+                {
+                    var rect = picProfile.ClientRectangle;
+                    using (var brush = new SolidBrush(Color.FromArgb(108, 117, 125)))
+                    {
+                        var font = new Font("Segoe UI", 48);
+                        var text = "👤";
+                        var size = e.Graphics.MeasureString(text, font);
+                        var x = (rect.Width - size.Width) / 2;
+                        var y = (rect.Height - size.Height) / 2;
+                        e.Graphics.DrawString(text, font, brush, x, y);
+                    }
+                }
+            };
+
+            btnBrowseImage = new Button
+            {
+                Text = "📁 Browse Image",
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Size = new Size(200, 35),
+                Location = new Point(300, 310),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.White,
+                ForeColor = Color.Black,
+                Cursor = Cursors.Hand
+            };
+            btnBrowseImage.FlatAppearance.BorderColor = Color.Black;
+            btnBrowseImage.FlatAppearance.BorderSize = 1;
+            btnBrowseImage.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
+            btnBrowseImage.Click += BtnBrowseImage_Click;
 
             // Buttons
             btnCancel = new Button
             {
                 Text = "Cancel",
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Size = new Size(120, 45),
-                Location = new Point(290, 600),
+                Size = new Size(100, 40),
+                Location = new Point(380, 560),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
                 Cursor = Cursors.Hand
             };
             btnCancel.FlatAppearance.BorderColor = Color.Black;
-            btnCancel.FlatAppearance.BorderSize = 2;
+            btnCancel.FlatAppearance.BorderSize = 1;
             btnCancel.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnCancel.Click += BtnCancel_Click;
 
             btnSave = new Button
             {
-                Text = isEditMode ? "Update Worker" : "Save Worker",
+                Text = isEditMode ? "Update" : "Save",
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Size = new Size(140, 45),
-                Location = new Point(420, 600),
+                Size = new Size(100, 40),
+                Location = new Point(490, 560),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Black,
                 ForeColor = Color.White,
@@ -311,63 +287,73 @@ namespace MaqboolFashion.Presentation.Forms
             btnSave.FlatAppearance.MouseOverBackColor = Color.FromArgb(64, 64, 64);
             btnSave.Click += BtnSave_Click;
 
-            // Add validation to CNIC and Phone fields
-            txtCNIC.KeyPress += (s, e) =>
-            {
-                if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
-                {
-                    e.Handled = true;
-                }
-            };
-
-            txtPhoneNumber.KeyPress += (s, e) =>
-            {
-                if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
-                {
-                    e.Handled = true;
-                }
-            };
-
-            // Add all controls
+            // Add all controls to form
             this.Controls.Add(lblTitle);
-            this.Controls.Add(profileLabel);
-            this.Controls.Add(picProfile);
-            this.Controls.Add(btnUploadImage);
             this.Controls.Add(lblName);
             this.Controls.Add(txtName);
             this.Controls.Add(lblArea);
             this.Controls.Add(txtArea);
             this.Controls.Add(lblCity);
             this.Controls.Add(txtCity);
-            this.Controls.Add(lblPhone);
+            this.Controls.Add(lblPhoneNumber);
             this.Controls.Add(txtPhoneNumber);
             this.Controls.Add(lblCNIC);
             this.Controls.Add(txtCNIC);
-            this.Controls.Add(lblCaste);
-            this.Controls.Add(txtCaste);
             this.Controls.Add(lblCost);
             this.Controls.Add(numCost);
             this.Controls.Add(lblJoiningDate);
             this.Controls.Add(dtpJoiningDate);
+            this.Controls.Add(lblProfilePicture);
+            this.Controls.Add(picProfile);
+            this.Controls.Add(btnBrowseImage);
             this.Controls.Add(btnCancel);
             this.Controls.Add(btnSave);
 
-            // Tab order and enter key navigation
-            this.KeyPreview = true;
+            // Event handlers for validation feedback
+            txtPhoneNumber.TextChanged += (s, e) => ValidatePhoneNumber();
+            txtCNIC.TextChanged += (s, e) => ValidateCNIC();
+
             this.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Escape)
                 {
                     BtnCancel_Click(this, EventArgs.Empty);
                 }
-                else if (e.KeyCode == Keys.F1)
-                {
-                    BtnSave_Click(this, EventArgs.Empty);
-                }
             };
+
+            this.KeyPreview = true;
         }
 
-        private void BtnUploadImage_Click(object sender, EventArgs e)
+        private void LoadLaborData()
+        {
+            if (editingLabor != null)
+            {
+                txtName.Text = editingLabor.Name;
+                txtArea.Text = editingLabor.Area;
+                txtCity.Text = editingLabor.City;
+                txtPhoneNumber.Text = editingLabor.PhoneNumber;
+                txtCNIC.Text = editingLabor.CNIC;
+                numCost.Value = editingLabor.Cost;
+                dtpJoiningDate.Value = editingLabor.JoiningDate;
+                selectedImagePath = editingLabor.ProfileImagePath;
+
+                // Load profile image if exists
+                if (!string.IsNullOrEmpty(editingLabor.ProfileImagePath) && File.Exists(editingLabor.ProfileImagePath))
+                {
+                    try
+                    {
+                        picProfile.Image = Image.FromFile(editingLabor.ProfileImagePath);
+                    }
+                    catch
+                    {
+                        // Image file not found or corrupted
+                        picProfile.Image = null;
+                    }
+                }
+            }
+        }
+
+        private void BtnBrowseImage_Click(object sender, EventArgs e)
         {
             using (var openFileDialog = new OpenFileDialog())
             {
@@ -390,29 +376,43 @@ namespace MaqboolFashion.Presentation.Forms
             }
         }
 
-        private void LoadLaborData()
+        private void ValidatePhoneNumber()
         {
-            if (editingLabor != null)
+            var phoneNumber = txtPhoneNumber.Text.Trim();
+            if (!string.IsNullOrEmpty(phoneNumber))
             {
-                txtName.Text = editingLabor.Name;
-                txtArea.Text = editingLabor.Area;
-                txtCity.Text = editingLabor.City;
-                txtPhoneNumber.Text = editingLabor.PhoneNumber;
-                txtCNIC.Text = editingLabor.CNIC;
-                txtCaste.Text = editingLabor.Caste;
-                numCost.Value = editingLabor.Cost;
-                dtpJoiningDate.Value = editingLabor.JoiningDate;
-
-                // Load existing profile image if available
-                if (!string.IsNullOrEmpty(editingLabor.ProfileImagePath) && File.Exists(editingLabor.ProfileImagePath))
+                if (LaborService.IsValidPhoneNumber(phoneNumber))
                 {
-                    try
-                    {
-                        picProfile.Image = Image.FromFile(editingLabor.ProfileImagePath);
-                        selectedImagePath = editingLabor.ProfileImagePath;
-                    }
-                    catch { }
+                    txtPhoneNumber.BackColor = Color.White;
                 }
+                else
+                {
+                    txtPhoneNumber.BackColor = Color.FromArgb(255, 240, 240);
+                }
+            }
+            else
+            {
+                txtPhoneNumber.BackColor = Color.White;
+            }
+        }
+
+        private void ValidateCNIC()
+        {
+            var cnic = txtCNIC.Text.Trim();
+            if (!string.IsNullOrEmpty(cnic))
+            {
+                if (LaborService.IsValidCNIC(cnic))
+                {
+                    txtCNIC.BackColor = Color.White;
+                }
+                else
+                {
+                    txtCNIC.BackColor = Color.FromArgb(255, 240, 240);
+                }
+            }
+            else
+            {
+                txtCNIC.BackColor = Color.White;
             }
         }
 
@@ -430,66 +430,94 @@ namespace MaqboolFashion.Presentation.Forms
                 var city = txtCity.Text.Trim();
                 var phoneNumber = txtPhoneNumber.Text.Trim();
                 var cnic = txtCNIC.Text.Trim();
-                var caste = txtCaste.Text.Trim();
                 var cost = numCost.Value;
                 var joiningDate = dtpJoiningDate.Value;
 
                 // Check if CNIC already exists
                 if (laborService.CNICExists(cnic, isEditMode ? editingLabor.Id : (int?)null))
                 {
-                    MessageBox.Show("A worker with this CNIC already exists.", "Validation Error",
+                    MessageBox.Show("A labor with this CNIC already exists.", "Validation Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtCNIC.Focus();
                     return;
                 }
 
-                string imagePath = null;
+                // Check if phone number already exists
+                if (laborService.PhoneNumberExists(phoneNumber, isEditMode ? editingLabor.Id : (int?)null))
+                {
+                    MessageBox.Show("A labor with this phone number already exists.", "Validation Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtPhoneNumber.Focus();
+                    return;
+                }
 
-                // Handle profile image
+                // Copy image to profile pictures folder if a new image was selected
+                string finalImagePath = "";
                 if (!string.IsNullOrEmpty(selectedImagePath))
                 {
-                    try
-                    {
-                        var imageBytes = File.ReadAllBytes(selectedImagePath);
-                        imagePath = laborService.SaveProfileImage(name, imageBytes); // Fixed parameter order
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error saving profile image: {ex.Message}", "Warning",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    finalImagePath = CopyImageToProfileFolder(selectedImagePath, name);
+                }
+                else if (isEditMode)
+                {
+                    finalImagePath = editingLabor.ProfileImagePath;
                 }
 
                 bool success;
                 if (isEditMode)
                 {
-                    success = laborService.UpdateLabor(editingLabor.Id, name, area, city, phoneNumber,
-                                                     cnic, caste, cost, joiningDate, imagePath);
+                    success = laborService.UpdateLabor(editingLabor.Id, name, area, city, phoneNumber, cnic, cost, joiningDate, finalImagePath);
                 }
                 else
                 {
-                    success = laborService.AddLabor(name, area, city, phoneNumber, cnic, caste,
-                                                  cost, joiningDate, imagePath);
+                    success = laborService.AddLabor(name, area, city, phoneNumber, cnic, cost, joiningDate, finalImagePath);
                 }
 
                 if (success)
                 {
                     IsSuccess = true;
-                    var message = isEditMode ? "Worker updated successfully!" : "Worker added successfully!";
+                    var message = isEditMode ? "Labor updated successfully!" : "Labor added successfully!";
                     MessageBox.Show(message, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Failed to save worker. Please try again.", "Error",
+                    MessageBox.Show("Failed to save labor. Please try again.", "Error",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving worker: {ex.Message}", "Error",
+                MessageBox.Show($"Error saving labor: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string CopyImageToProfileFolder(string sourcePath, string laborName)
+        {
+            try
+            {
+                // Create profile pictures directory if it doesn't exist
+                var profileDir = Path.Combine(Application.StartupPath, "ProfilePictures");
+                if (!Directory.Exists(profileDir))
+                {
+                    Directory.CreateDirectory(profileDir);
+                }
+
+                // Create unique filename
+                var extension = Path.GetExtension(sourcePath);
+                var fileName = $"{laborName.Replace(" ", "_")}_{DateTime.Now:yyyyMMdd_HHmmss}{extension}";
+                var destinationPath = Path.Combine(profileDir, fileName);
+
+                // Copy file
+                File.Copy(sourcePath, destinationPath, true);
+                return destinationPath;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error copying profile picture: {ex.Message}", "Warning",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return "";
             }
         }
 
@@ -498,7 +526,7 @@ namespace MaqboolFashion.Presentation.Forms
             // Name validation
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                MessageBox.Show("Please enter worker's full name.", "Validation Error",
+                MessageBox.Show("Please enter labor name.", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtName.Focus();
                 return false;
@@ -506,7 +534,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             if (txtName.Text.Trim().Length < 2)
             {
-                MessageBox.Show("Name must be at least 2 characters long.", "Validation Error",
+                MessageBox.Show("Labor name must be at least 2 characters long.", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtName.Focus();
                 return false;
@@ -515,7 +543,7 @@ namespace MaqboolFashion.Presentation.Forms
             // Area validation
             if (string.IsNullOrWhiteSpace(txtArea.Text))
             {
-                MessageBox.Show("Please enter worker's area.", "Validation Error",
+                MessageBox.Show("Please enter area.", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtArea.Focus();
                 return false;
@@ -524,13 +552,13 @@ namespace MaqboolFashion.Presentation.Forms
             // City validation
             if (string.IsNullOrWhiteSpace(txtCity.Text))
             {
-                MessageBox.Show("Please enter worker's city.", "Validation Error",
+                MessageBox.Show("Please enter city.", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtCity.Focus();
                 return false;
             }
 
-            // Phone validation
+            // Phone number validation
             if (string.IsNullOrWhiteSpace(txtPhoneNumber.Text))
             {
                 MessageBox.Show("Please enter phone number.", "Validation Error",
@@ -539,9 +567,9 @@ namespace MaqboolFashion.Presentation.Forms
                 return false;
             }
 
-            if (txtPhoneNumber.Text.Length != 11)
+            if (!LaborService.IsValidPhoneNumber(txtPhoneNumber.Text.Trim()))
             {
-                MessageBox.Show("Phone number must be exactly 11 digits.", "Validation Error",
+                MessageBox.Show("Please enter a valid phone number (10-11 digits).", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPhoneNumber.Focus();
                 return false;
@@ -556,9 +584,9 @@ namespace MaqboolFashion.Presentation.Forms
                 return false;
             }
 
-            if (txtCNIC.Text.Length != 13)
+            if (!LaborService.IsValidCNIC(txtCNIC.Text.Trim()))
             {
-                MessageBox.Show("CNIC must be exactly 13 digits.", "Validation Error",
+                MessageBox.Show("Please enter a valid CNIC number (13 digits).", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtCNIC.Focus();
                 return false;
@@ -567,7 +595,7 @@ namespace MaqboolFashion.Presentation.Forms
             // Cost validation
             if (numCost.Value <= 0)
             {
-                MessageBox.Show("Please enter a valid cost amount.", "Validation Error",
+                MessageBox.Show("Please enter a valid daily cost.", "Validation Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 numCost.Focus();
                 return false;
@@ -591,14 +619,14 @@ namespace MaqboolFashion.Presentation.Forms
             this.Close();
         }
 
-        protected override void OnFormClosed(FormClosedEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Clean up image resources
+            // Clean up any resources
             if (picProfile.Image != null)
             {
                 picProfile.Image.Dispose();
             }
-            base.OnFormClosed(e);
+            base.OnFormClosing(e);
         }
     }
 }
