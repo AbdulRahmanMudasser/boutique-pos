@@ -32,6 +32,10 @@ namespace MaqboolFashion.Presentation.Forms
         {
             var contentPanel = GetContentPanel();
 
+            // Enable only vertical scroll for the content panel
+            contentPanel.AutoScroll = true;
+            contentPanel.AutoScrollMinSize = new Size(0, 700); // Only vertical scroll
+
             CreateHeaderSection(contentPanel);
             CreateSearchAndActionPanel(contentPanel);
             CreateDataGrid(contentPanel);
@@ -208,7 +212,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             var lblActions = new Label
             {
-                Text = "⚙️ Actions",
+                Text = "Actions",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
@@ -224,7 +228,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             btnAdd = new Button
             {
-                Text = "👷 Add Labor",
+                Text = "➕ Add Labor",
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 Size = new Size(140, 40),
                 Location = new Point(0, 0),
@@ -237,6 +241,35 @@ namespace MaqboolFashion.Presentation.Forms
             btnAdd.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 40, 40);
             btnAdd.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 20, 20);
             btnAdd.Click += BtnAdd_Click;
+
+            // Add subtle shadow effect to Add button
+            btnAdd.Paint += (s, e) =>
+            {
+                var rect = btnAdd.ClientRectangle;
+
+                // Draw shadow
+                using (var shadowBrush = new SolidBrush(Color.FromArgb(30, 0, 0, 0)))
+                {
+                    e.Graphics.FillRectangle(shadowBrush, rect.X + 2, rect.Y + 2, rect.Width, rect.Height);
+                }
+
+                // Draw main button
+                using (var brush = new SolidBrush(btnAdd.BackColor))
+                {
+                    e.Graphics.FillRectangle(brush, rect);
+                }
+
+                // Draw text
+                using (var brush = new SolidBrush(btnAdd.ForeColor))
+                {
+                    var stringFormat = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    e.Graphics.DrawString(btnAdd.Text, btnAdd.Font, brush, rect, stringFormat);
+                }
+            };
 
             btnRefresh = new Button
             {
@@ -254,6 +287,16 @@ namespace MaqboolFashion.Presentation.Forms
             btnRefresh.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnRefresh.FlatAppearance.MouseDownBackColor = Color.FromArgb(220, 220, 220);
             btnRefresh.Click += (s, e) => LoadLabor();
+
+            // Add hover effects
+            btnRefresh.MouseEnter += (s, e) =>
+            {
+                btnRefresh.BackColor = Color.FromArgb(240, 240, 240);
+            };
+            btnRefresh.MouseLeave += (s, e) =>
+            {
+                btnRefresh.BackColor = Color.White;
+            };
 
             buttonContainer.Controls.Add(btnAdd);
             buttonContainer.Controls.Add(btnRefresh);
@@ -312,10 +355,11 @@ namespace MaqboolFashion.Presentation.Forms
                 ColumnHeadersHeight = 50,
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
                 RowHeadersVisible = false,
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11),
                 GridColor = Color.FromArgb(240, 240, 240),
                 RowTemplate = { Height = 45 },
-                EnableHeadersVisualStyles = false
+                EnableHeadersVisualStyles = false,
+                ScrollBars = ScrollBars.Vertical // Only vertical scrollbar
             };
 
             // Header style
@@ -323,29 +367,29 @@ namespace MaqboolFashion.Presentation.Forms
             {
                 BackColor = Color.Black,
                 ForeColor = Color.White,
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 Alignment = DataGridViewContentAlignment.MiddleLeft,
-                Padding = new Padding(10, 8, 10, 8),
+                Padding = new Padding(15, 10, 15, 10),
                 SelectionBackColor = Color.Black,
                 SelectionForeColor = Color.White
             };
 
-            // Default cell style
+            // Default cell style - applies to ALL cells
             laborGrid.DefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.White,
                 ForeColor = Color.Black,
                 SelectionBackColor = Color.FromArgb(230, 230, 230),
                 SelectionForeColor = Color.Black,
-                Font = new Font("Segoe UI", 10),
-                Padding = new Padding(10, 6, 10, 6),
+                Font = new Font("Segoe UI", 11),
+                Padding = new Padding(15, 8, 15, 8),
                 Alignment = DataGridViewContentAlignment.MiddleLeft
             };
 
-            // Remove alternating row style
+            // Remove alternating row style completely
             laborGrid.AlternatingRowsDefaultCellStyle = laborGrid.DefaultCellStyle;
 
-            // Add columns
+            // Add columns with consistent styling
             laborGrid.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Id",
@@ -359,7 +403,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Name = "Name",
                 HeaderText = "Name",
                 DataPropertyName = "Name",
-                FillWeight = 15,
+                FillWeight = 18,
                 MinimumWidth = 120
             });
 
@@ -368,7 +412,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Name = "Area",
                 HeaderText = "Area",
                 DataPropertyName = "Area",
-                FillWeight = 12,
+                FillWeight = 15,
                 MinimumWidth = 100
             });
 
@@ -377,7 +421,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Name = "City",
                 HeaderText = "City",
                 DataPropertyName = "City",
-                FillWeight = 12,
+                FillWeight = 15,
                 MinimumWidth = 100
             });
 
@@ -386,17 +430,8 @@ namespace MaqboolFashion.Presentation.Forms
                 Name = "PhoneNumber",
                 HeaderText = "Phone",
                 DataPropertyName = "PhoneNumber",
-                FillWeight = 12,
-                MinimumWidth = 110
-            });
-
-            laborGrid.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "CNIC",
-                HeaderText = "CNIC",
-                DataPropertyName = "CNIC",
                 FillWeight = 15,
-                MinimumWidth = 130
+                MinimumWidth = 110
             });
 
             laborGrid.Columns.Add(new DataGridViewTextBoxColumn
@@ -404,8 +439,8 @@ namespace MaqboolFashion.Presentation.Forms
                 Name = "Cost",
                 HeaderText = "Daily Cost",
                 DataPropertyName = "Cost",
-                FillWeight = 10,
-                MinimumWidth = 80,
+                FillWeight = 12,
+                MinimumWidth = 90,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     Format = "C0",
@@ -414,18 +449,18 @@ namespace MaqboolFashion.Presentation.Forms
                     ForeColor = Color.Black,
                     SelectionBackColor = Color.FromArgb(230, 230, 230),
                     SelectionForeColor = Color.Black,
-                    Font = new Font("Segoe UI", 10),
-                    Padding = new Padding(10, 6, 10, 6)
+                    Font = new Font("Segoe UI", 11),
+                    Padding = new Padding(15, 8, 15, 8)
                 }
             });
 
             laborGrid.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "CurrentAdvance",
-                HeaderText = "Current Advance",
+                HeaderText = "Advance",
                 DataPropertyName = "CurrentAdvance",
                 FillWeight = 12,
-                MinimumWidth = 100,
+                MinimumWidth = 90,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     Format = "C0",
@@ -434,28 +469,8 @@ namespace MaqboolFashion.Presentation.Forms
                     ForeColor = Color.Black,
                     SelectionBackColor = Color.FromArgb(230, 230, 230),
                     SelectionForeColor = Color.Black,
-                    Font = new Font("Segoe UI", 10),
-                    Padding = new Padding(10, 6, 10, 6)
-                }
-            });
-
-            laborGrid.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "JoiningDate",
-                HeaderText = "Joining Date",
-                DataPropertyName = "JoiningDate",
-                FillWeight = 12,
-                MinimumWidth = 100,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    Format = "dd/MM/yyyy",
-                    Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    BackColor = Color.White,
-                    ForeColor = Color.Black,
-                    SelectionBackColor = Color.FromArgb(230, 230, 230),
-                    SelectionForeColor = Color.Black,
-                    Font = new Font("Segoe UI", 10),
-                    Padding = new Padding(10, 6, 10, 6)
+                    Font = new Font("Segoe UI", 11),
+                    Padding = new Padding(15, 8, 15, 8)
                 }
             });
 
@@ -473,7 +488,7 @@ namespace MaqboolFashion.Presentation.Forms
                     ForeColor = Color.White,
                     SelectionBackColor = Color.Black,
                     SelectionForeColor = Color.White,
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
                     Padding = new Padding(5)
                 }
@@ -493,7 +508,7 @@ namespace MaqboolFashion.Presentation.Forms
                     ForeColor = Color.White,
                     SelectionBackColor = Color.Black,
                     SelectionForeColor = Color.White,
-                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
                     Padding = new Padding(5)
                 }
@@ -502,12 +517,11 @@ namespace MaqboolFashion.Presentation.Forms
             laborGrid.Columns.Add(editColumn);
             laborGrid.Columns.Add(deleteColumn);
 
-            // Ensure consistent styling for all columns
+            // Ensure all columns inherit the same base style
             foreach (DataGridViewColumn column in laborGrid.Columns)
             {
                 if (column.Name != "Edit" && column.Name != "Delete" &&
-                    column.Name != "Cost" && column.Name != "CurrentAdvance" &&
-                    column.Name != "JoiningDate")
+                    column.Name != "Cost" && column.Name != "CurrentAdvance")
                 {
                     column.DefaultCellStyle = new DataGridViewCellStyle
                     {
@@ -515,8 +529,8 @@ namespace MaqboolFashion.Presentation.Forms
                         ForeColor = Color.Black,
                         SelectionBackColor = Color.FromArgb(230, 230, 230),
                         SelectionForeColor = Color.Black,
-                        Font = new Font("Segoe UI", 10),
-                        Padding = new Padding(10, 6, 10, 6),
+                        Font = new Font("Segoe UI", 11),
+                        Padding = new Padding(15, 8, 15, 8),
                         Alignment = DataGridViewContentAlignment.MiddleLeft
                     };
                 }
@@ -538,8 +552,8 @@ namespace MaqboolFashion.Presentation.Forms
                             ForeColor = Color.Black,
                             SelectionBackColor = Color.FromArgb(230, 230, 230),
                             SelectionForeColor = Color.Black,
-                            Font = new Font("Segoe UI", 10),
-                            Padding = new Padding(10, 6, 10, 6),
+                            Font = new Font("Segoe UI", 11),
+                            Padding = new Padding(15, 8, 15, 8),
                             Alignment = DataGridViewContentAlignment.MiddleLeft
                         };
                     }
@@ -593,10 +607,8 @@ namespace MaqboolFashion.Presentation.Forms
                     Area = l.Area,
                     City = l.City,
                     PhoneNumber = LaborService.FormatPhoneNumber(l.PhoneNumber),
-                    CNIC = LaborService.FormatCNIC(l.CNIC),
                     Cost = l.Cost,
-                    CurrentAdvance = l.CurrentAdvance,
-                    JoiningDate = l.JoiningDate
+                    CurrentAdvance = l.CurrentAdvance
                 }).ToList();
 
                 pagination.UpdatePagination(totalCount, currentPage, pageSize);

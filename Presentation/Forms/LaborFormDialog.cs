@@ -8,6 +8,7 @@ namespace MaqboolFashion.Presentation.Forms
 {
     public class LaborFormDialog : Form
     {
+        private Panel mainPanel;
         private TextBox txtName;
         private TextBox txtArea;
         private TextBox txtCity;
@@ -34,7 +35,7 @@ namespace MaqboolFashion.Presentation.Forms
             isEditMode = labor != null;
 
             InitializeDialog();
-            CreateFormControls();
+            CreateScrollableContent();
 
             if (isEditMode)
             {
@@ -45,136 +46,254 @@ namespace MaqboolFashion.Presentation.Forms
         private void InitializeDialog()
         {
             this.Text = isEditMode ? "Edit Labor" : "Add Labor";
-            this.Size = new Size(600, 620);
+            this.Size = new Size(720, 600);
             this.StartPosition = FormStartPosition.CenterParent;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.BackColor = Color.White;
             this.Font = new Font("Segoe UI", 10);
+            this.AutoScroll = true;
         }
 
-        private void CreateFormControls()
+        private void CreateScrollableContent()
         {
+            // Main scrollable panel
+            mainPanel = new Panel
+            {
+                Location = new Point(0, 0),
+                Size = new Size(700, 750), // Increased height to accommodate all content
+                BackColor = Color.White,
+                AutoScroll = true
+            };
+
             lblTitle = new Label
             {
                 Text = isEditMode ? "Edit Labor Information" : "Add New Labor",
-                Font = new Font("Segoe UI", 16, FontStyle.Bold),
+                Font = new Font("Segoe UI", 18, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(30, 20)
             };
 
-            // Left Column
+            var subtitleLabel = new Label
+            {
+                Text = "Fill in the labor details below. Fields marked with * are required.",
+                Font = new Font("Segoe UI", 10),
+                ForeColor = Color.FromArgb(108, 117, 125),
+                AutoSize = true,
+                Location = new Point(30, 55)
+            };
+
+            // Create a separator line
+            var separatorLine = new Panel
+            {
+                Height = 2,
+                Width = 640,
+                Location = new Point(30, 85),
+                BackColor = Color.FromArgb(240, 240, 240)
+            };
+
+            // Left Column Container
+            var leftColumnPanel = new Panel
+            {
+                Location = new Point(30, 110),
+                Size = new Size(300, 550),
+                BackColor = Color.Transparent
+            };
+
+            // Right Column Container  
+            var rightColumnPanel = new Panel
+            {
+                Location = new Point(370, 110),
+                Size = new Size(300, 550),
+                BackColor = Color.Transparent
+            };
+
+            CreateLeftColumnControls(leftColumnPanel);
+            CreateRightColumnControls(rightColumnPanel);
+            CreateActionButtons();
+
+            // Add all controls to main panel
+            mainPanel.Controls.Add(lblTitle);
+            mainPanel.Controls.Add(subtitleLabel);
+            mainPanel.Controls.Add(separatorLine);
+            mainPanel.Controls.Add(leftColumnPanel);
+            mainPanel.Controls.Add(rightColumnPanel);
+
+            // Add main panel to form
+            this.Controls.Add(mainPanel);
+
+            // Handle form resize
+            this.Resize += (s, e) =>
+            {
+                if (mainPanel != null)
+                {
+                    mainPanel.Size = new Size(this.ClientSize.Width - 20, 750);
+                }
+            };
+        }
+
+        private void CreateLeftColumnControls(Panel parent)
+        {
+            int yPos = 20;
+            int spacing = 70;
+
+            // Name
             var lblName = new Label
             {
                 Text = "Full Name *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 70)
+                Location = new Point(0, yPos)
             };
 
             txtName = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 95),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black
             };
 
+            parent.Controls.Add(lblName);
+            parent.Controls.Add(txtName);
+            yPos += spacing;
+
+            // Area
             var lblArea = new Label
             {
                 Text = "Area *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 140)
+                Location = new Point(0, yPos)
             };
 
             txtArea = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 165),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black
             };
 
+            parent.Controls.Add(lblArea);
+            parent.Controls.Add(txtArea);
+            yPos += spacing;
+
+            // City
             var lblCity = new Label
             {
                 Text = "City *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 210)
+                Location = new Point(0, yPos)
             };
 
             txtCity = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 235),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black
             };
 
+            parent.Controls.Add(lblCity);
+            parent.Controls.Add(txtCity);
+            yPos += spacing;
+
+            // Phone Number
             var lblPhoneNumber = new Label
             {
                 Text = "Phone Number *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 280)
+                Location = new Point(0, yPos)
+            };
+
+            var phoneHint = new Label
+            {
+                Text = "Format: 03xx-xxxxxxx",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Color.FromArgb(108, 117, 125),
+                AutoSize = true,
+                Location = new Point(150, yPos)
             };
 
             txtPhoneNumber = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 305),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
             };
 
+            parent.Controls.Add(lblPhoneNumber);
+            parent.Controls.Add(phoneHint);
+            parent.Controls.Add(txtPhoneNumber);
+            yPos += spacing;
+
+            // CNIC
             var lblCNIC = new Label
             {
                 Text = "CNIC Number *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 350)
+                Location = new Point(0, yPos)
+            };
+
+            var cnicHint = new Label
+            {
+                Text = "Format: xxxxx-xxxxxxx-x",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Color.FromArgb(108, 117, 125),
+                AutoSize = true,
+                Location = new Point(150, yPos)
             };
 
             txtCNIC = new TextBox
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 375),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
             };
 
+            parent.Controls.Add(lblCNIC);
+            parent.Controls.Add(cnicHint);
+            parent.Controls.Add(txtCNIC);
+            yPos += spacing;
+
+            // Daily Cost
             var lblCost = new Label
             {
                 Text = "Daily Cost (Rs.) *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 420)
+                Location = new Point(0, yPos)
             };
 
             numCost = new NumericUpDown
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 445),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
@@ -184,39 +303,72 @@ namespace MaqboolFashion.Presentation.Forms
                 ThousandsSeparator = true
             };
 
+            parent.Controls.Add(lblCost);
+            parent.Controls.Add(numCost);
+            yPos += spacing;
+
+            // Joining Date
             var lblJoiningDate = new Label
             {
                 Text = "Joining Date *",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(30, 490)
+                Location = new Point(0, yPos)
             };
 
             dtpJoiningDate = new DateTimePicker
             {
                 Font = new Font("Segoe UI", 11),
-                Size = new Size(200, 30),
-                Location = new Point(30, 515),
+                Size = new Size(280, 35),
+                Location = new Point(0, yPos + 25),
                 Format = DateTimePickerFormat.Short,
                 Value = DateTime.Now
             };
 
-            // Right Column - Profile Picture
+            parent.Controls.Add(lblJoiningDate);
+            parent.Controls.Add(dtpJoiningDate);
+
+            // Event handlers for validation feedback
+            txtPhoneNumber.TextChanged += (s, e) => ValidatePhoneNumber();
+            txtCNIC.TextChanged += (s, e) => ValidateCNIC();
+        }
+
+        private void CreateRightColumnControls(Panel parent)
+        {
+            // Profile Picture Section
             var lblProfilePicture = new Label
             {
                 Text = "Profile Picture",
-                Font = new Font("Segoe UI", 10),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
-                Location = new Point(300, 70)
+                Location = new Point(0, 20)
+            };
+
+            var profileHint = new Label
+            {
+                Text = "Optional - JPG, PNG, BMP files supported",
+                Font = new Font("Segoe UI", 9),
+                ForeColor = Color.FromArgb(108, 117, 125),
+                AutoSize = true,
+                Location = new Point(0, 45)
+            };
+
+            // Profile picture container with border
+            var picContainer = new Panel
+            {
+                Size = new Size(250, 250),
+                Location = new Point(0, 70),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.FromArgb(248, 249, 250)
             };
 
             picProfile = new PictureBox
             {
-                Size = new Size(200, 200),
-                Location = new Point(300, 95),
-                BorderStyle = BorderStyle.FixedSingle,
+                Size = new Size(248, 248),
+                Location = new Point(1, 1),
+                BorderStyle = BorderStyle.None,
                 BackColor = Color.FromArgb(248, 249, 250),
                 SizeMode = PictureBoxSizeMode.StretchImage
             };
@@ -242,42 +394,73 @@ namespace MaqboolFashion.Presentation.Forms
             btnBrowseImage = new Button
             {
                 Text = "📁 Browse Image",
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                Size = new Size(200, 35),
-                Location = new Point(300, 310),
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                Size = new Size(250, 40),
+                Location = new Point(0, 340),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
                 Cursor = Cursors.Hand
             };
             btnBrowseImage.FlatAppearance.BorderColor = Color.Black;
-            btnBrowseImage.FlatAppearance.BorderSize = 1;
+            btnBrowseImage.FlatAppearance.BorderSize = 2;
             btnBrowseImage.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnBrowseImage.Click += BtnBrowseImage_Click;
 
-            // Buttons
+            var btnRemoveImage = new Button
+            {
+                Text = "🗑️ Remove Image",
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                Size = new Size(250, 40),
+                Location = new Point(0, 390),
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.White,
+                ForeColor = Color.FromArgb(220, 53, 69),
+                Cursor = Cursors.Hand
+            };
+            btnRemoveImage.FlatAppearance.BorderColor = Color.FromArgb(220, 53, 69);
+            btnRemoveImage.FlatAppearance.BorderSize = 2;
+            btnRemoveImage.FlatAppearance.MouseOverBackColor = Color.FromArgb(255, 240, 240);
+            btnRemoveImage.Click += (s, e) =>
+            {
+                picProfile.Image = null;
+                selectedImagePath = "";
+                picProfile.Invalidate();
+            };
+
+            picContainer.Controls.Add(picProfile);
+            parent.Controls.Add(lblProfilePicture);
+            parent.Controls.Add(profileHint);
+            parent.Controls.Add(picContainer);
+            parent.Controls.Add(btnBrowseImage);
+            parent.Controls.Add(btnRemoveImage);
+        }
+
+        private void CreateActionButtons()
+        {
+            // Action buttons at the bottom of main panel
             btnCancel = new Button
             {
                 Text = "Cancel",
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Size = new Size(100, 40),
-                Location = new Point(380, 560),
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Size = new Size(120, 45),
+                Location = new Point(430, 680),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
                 ForeColor = Color.Black,
                 Cursor = Cursors.Hand
             };
             btnCancel.FlatAppearance.BorderColor = Color.Black;
-            btnCancel.FlatAppearance.BorderSize = 1;
+            btnCancel.FlatAppearance.BorderSize = 2;
             btnCancel.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnCancel.Click += BtnCancel_Click;
 
             btnSave = new Button
             {
-                Text = isEditMode ? "Update" : "Save",
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Size = new Size(100, 40),
-                Location = new Point(490, 560),
+                Text = isEditMode ? "Update Labor" : "Save Labor",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Size = new Size(150, 45),
+                Location = new Point(560, 680),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.Black,
                 ForeColor = Color.White,
@@ -287,37 +470,19 @@ namespace MaqboolFashion.Presentation.Forms
             btnSave.FlatAppearance.MouseOverBackColor = Color.FromArgb(64, 64, 64);
             btnSave.Click += BtnSave_Click;
 
-            // Add all controls to form
-            this.Controls.Add(lblTitle);
-            this.Controls.Add(lblName);
-            this.Controls.Add(txtName);
-            this.Controls.Add(lblArea);
-            this.Controls.Add(txtArea);
-            this.Controls.Add(lblCity);
-            this.Controls.Add(txtCity);
-            this.Controls.Add(lblPhoneNumber);
-            this.Controls.Add(txtPhoneNumber);
-            this.Controls.Add(lblCNIC);
-            this.Controls.Add(txtCNIC);
-            this.Controls.Add(lblCost);
-            this.Controls.Add(numCost);
-            this.Controls.Add(lblJoiningDate);
-            this.Controls.Add(dtpJoiningDate);
-            this.Controls.Add(lblProfilePicture);
-            this.Controls.Add(picProfile);
-            this.Controls.Add(btnBrowseImage);
-            this.Controls.Add(btnCancel);
-            this.Controls.Add(btnSave);
+            mainPanel.Controls.Add(btnCancel);
+            mainPanel.Controls.Add(btnSave);
 
-            // Event handlers for validation feedback
-            txtPhoneNumber.TextChanged += (s, e) => ValidatePhoneNumber();
-            txtCNIC.TextChanged += (s, e) => ValidateCNIC();
-
+            // Keyboard shortcuts
             this.KeyDown += (s, e) =>
             {
                 if (e.KeyCode == Keys.Escape)
                 {
                     BtnCancel_Click(this, EventArgs.Empty);
+                }
+                else if (e.KeyCode == Keys.Enter && e.Control)
+                {
+                    BtnSave_Click(this, EventArgs.Empty);
                 }
             };
 
@@ -359,6 +524,7 @@ namespace MaqboolFashion.Presentation.Forms
             {
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
                 openFileDialog.Title = "Select Profile Picture";
+                openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -384,15 +550,18 @@ namespace MaqboolFashion.Presentation.Forms
                 if (LaborService.IsValidPhoneNumber(phoneNumber))
                 {
                     txtPhoneNumber.BackColor = Color.White;
+                    txtPhoneNumber.ForeColor = Color.Black;
                 }
                 else
                 {
                     txtPhoneNumber.BackColor = Color.FromArgb(255, 240, 240);
+                    txtPhoneNumber.ForeColor = Color.FromArgb(220, 53, 69);
                 }
             }
             else
             {
                 txtPhoneNumber.BackColor = Color.White;
+                txtPhoneNumber.ForeColor = Color.Black;
             }
         }
 
@@ -404,15 +573,18 @@ namespace MaqboolFashion.Presentation.Forms
                 if (LaborService.IsValidCNIC(cnic))
                 {
                     txtCNIC.BackColor = Color.White;
+                    txtCNIC.ForeColor = Color.Black;
                 }
                 else
                 {
                     txtCNIC.BackColor = Color.FromArgb(255, 240, 240);
+                    txtCNIC.ForeColor = Color.FromArgb(220, 53, 69);
                 }
             }
             else
             {
                 txtCNIC.BackColor = Color.White;
+                txtCNIC.ForeColor = Color.Black;
             }
         }
 
