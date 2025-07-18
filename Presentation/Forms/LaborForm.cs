@@ -17,7 +17,7 @@ namespace MaqboolFashion.Presentation.Forms
         private PaginationComponent pagination;
         private Panel searchPanel;
         private Panel actionPanel;
-        private Label totalLaborsLabel;
+        private Label totalLaborLabel;
         private Timer searchTimer;
 
         public LaborForm() : base("LABOR MANAGEMENT - MAQBOOL FASHION")
@@ -30,26 +30,26 @@ namespace MaqboolFashion.Presentation.Forms
 
         protected override void CreatePageContent()
         {
-            Panel contentPanel = GetContentPanel();
+            var contentPanel = GetContentPanel();
 
             CreateHeaderSection(contentPanel);
             CreateSearchAndActionPanel(contentPanel);
             CreateDataGrid(contentPanel);
             CreatePagination(contentPanel);
 
-            LoadLabors();
+            LoadLabor();
         }
 
         private void CreateHeaderSection(Panel contentPanel)
         {
-            Panel headerContainer = new Panel
+            var headerContainer = new Panel
             {
                 Size = new Size(contentPanel.Width - 60, 100),
                 Location = new Point(0, 0),
                 BackColor = Color.White
             };
 
-            Label headerLabel = new Label
+            var headerLabel = new Label
             {
                 Text = "Labor Management",
                 Font = new Font("Segoe UI", 28, FontStyle.Bold),
@@ -58,25 +58,25 @@ namespace MaqboolFashion.Presentation.Forms
                 Location = new Point(0, 10)
             };
 
-            Label subtitleLabel = new Label
+            var subtitleLabel = new Label
             {
-                Text = "Manage your workforce effectively with complete employee records",
+                Text = "Manage your workforce efficiently - track workers, their details, and advance payments",
                 Font = new Font("Segoe UI", 12),
                 ForeColor = Color.FromArgb(108, 117, 125),
                 AutoSize = true,
                 Location = new Point(0, 50)
             };
 
-            totalLaborsLabel = new Label
+            totalLaborLabel = new Label
             {
-                Text = "Total Workers: 0",
+                Text = "Total Labor: 0",
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(0, 75)
             };
 
-            Panel separatorLine = new Panel
+            var separatorLine = new Panel
             {
                 Height = 2,
                 Width = headerContainer.Width,
@@ -86,7 +86,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             headerContainer.Controls.Add(headerLabel);
             headerContainer.Controls.Add(subtitleLabel);
-            headerContainer.Controls.Add(totalLaborsLabel);
+            headerContainer.Controls.Add(totalLaborLabel);
             headerContainer.Controls.Add(separatorLine);
 
             contentPanel.Controls.Add(headerContainer);
@@ -103,15 +103,15 @@ namespace MaqboolFashion.Presentation.Forms
 
             searchPanel.Paint += (s, e) =>
             {
-                Rectangle rect = searchPanel.ClientRectangle;
-                using (Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1))
+                var rect = searchPanel.ClientRectangle;
+                using (var pen = new Pen(Color.FromArgb(220, 220, 220), 1))
                 {
                     e.Graphics.DrawRectangle(pen, 0, 0, rect.Width - 1, rect.Height - 1);
                 }
             };
 
             // Main container for better layout control
-            Panel mainContainer = new Panel
+            var mainContainer = new Panel
             {
                 Size = new Size(searchPanel.Width - 40, 80),
                 Location = new Point(20, 10),
@@ -119,23 +119,23 @@ namespace MaqboolFashion.Presentation.Forms
             };
 
             // Left section - Search
-            Panel searchSection = new Panel
+            var searchSection = new Panel
             {
                 Size = new Size(450, 70),
-                Location = new Point(0, 10),
+                Location = new Point(0, 5),
                 BackColor = Color.Transparent
             };
 
-            Label lblSearch = new Label
+            var lblSearch = new Label
             {
-                Text = "🔍 Search Workers",
+                Text = "🔍 Search Labor",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
                 Location = new Point(5, 0)
             };
 
-            Panel searchInputContainer = new Panel
+            var searchInputContainer = new Panel
             {
                 Size = new Size(400, 45),
                 Location = new Point(5, 25),
@@ -144,8 +144,8 @@ namespace MaqboolFashion.Presentation.Forms
 
             searchInputContainer.Paint += (s, e) =>
             {
-                Rectangle rect = searchInputContainer.ClientRectangle;
-                using (Pen pen = new Pen(Color.FromArgb(200, 200, 200), 2))
+                var rect = searchInputContainer.ClientRectangle;
+                using (var pen = new Pen(Color.FromArgb(200, 200, 200), 2))
                 {
                     e.Graphics.DrawRectangle(pen, 0, 0, rect.Width - 1, rect.Height - 1);
                 }
@@ -158,7 +158,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Location = new Point(5, 5),
                 BorderStyle = BorderStyle.None,
                 BackColor = Color.White,
-                ForeColor = Color.Black
+                ForeColor = Color.Black,
             };
 
             txtSearch.Enter += (s, e) =>
@@ -176,7 +176,7 @@ namespace MaqboolFashion.Presentation.Forms
             searchTimer.Tick += (s, e) =>
             {
                 searchTimer.Stop();
-                LoadLabors();
+                LoadLabor();
             };
 
             txtSearch.TextChanged += (s, e) =>
@@ -190,8 +190,7 @@ namespace MaqboolFashion.Presentation.Forms
                 if (e.KeyCode == Keys.Enter)
                 {
                     searchTimer.Stop();
-                    LoadLabors();
-                    e.SuppressKeyPress = true; // Prevent beep sound
+                    LoadLabor();
                 }
             };
 
@@ -203,11 +202,11 @@ namespace MaqboolFashion.Presentation.Forms
             actionPanel = new Panel
             {
                 Size = new Size(300, 70),
-                Location = new Point(mainContainer.Width - 300, 10),
+                Location = new Point(mainContainer.Width - 300, 5),
                 BackColor = Color.Transparent
             };
 
-            Label lblActions = new Label
+            var lblActions = new Label
             {
                 Text = "⚙️ Actions",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
@@ -216,7 +215,7 @@ namespace MaqboolFashion.Presentation.Forms
                 Location = new Point(5, 0)
             };
 
-            Panel buttonContainer = new Panel
+            var buttonContainer = new Panel
             {
                 Size = new Size(290, 45),
                 Location = new Point(5, 25),
@@ -225,7 +224,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             btnAdd = new Button
             {
-                Text = "➕ Add Worker",
+                Text = "👷 Add Labor",
                 Font = new Font("Segoe UI", 11, FontStyle.Bold),
                 Size = new Size(140, 40),
                 Location = new Point(0, 0),
@@ -238,29 +237,6 @@ namespace MaqboolFashion.Presentation.Forms
             btnAdd.FlatAppearance.MouseOverBackColor = Color.FromArgb(40, 40, 40);
             btnAdd.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 20, 20);
             btnAdd.Click += BtnAdd_Click;
-
-            // Add subtle shadow effect to Add button
-            btnAdd.Paint += (s, e) =>
-            {
-                Rectangle rect = btnAdd.ClientRectangle;
-                using (SolidBrush shadowBrush = new SolidBrush(Color.FromArgb(30, 0, 0, 0)))
-                {
-                    e.Graphics.FillRectangle(shadowBrush, rect.X + 2, rect.Y + 2, rect.Width, rect.Height);
-                }
-                using (SolidBrush brush = new SolidBrush(btnAdd.BackColor))
-                {
-                    e.Graphics.FillRectangle(brush, rect);
-                }
-                using (SolidBrush brush = new SolidBrush(btnAdd.ForeColor))
-                {
-                    StringFormat stringFormat = new StringFormat
-                    {
-                        Alignment = StringAlignment.Center,
-                        LineAlignment = StringAlignment.Center
-                    };
-                    e.Graphics.DrawString(btnAdd.Text, btnAdd.Font, brush, rect, stringFormat);
-                }
-            };
 
             btnRefresh = new Button
             {
@@ -277,19 +253,11 @@ namespace MaqboolFashion.Presentation.Forms
             btnRefresh.FlatAppearance.BorderSize = 2;
             btnRefresh.FlatAppearance.MouseOverBackColor = Color.FromArgb(240, 240, 240);
             btnRefresh.FlatAppearance.MouseDownBackColor = Color.FromArgb(220, 220, 220);
-            btnRefresh.Click += (s, e) => LoadLabors();
-
-            btnRefresh.MouseEnter += (s, e) =>
-            {
-                btnRefresh.BackColor = Color.FromArgb(240, 240, 240);
-            };
-            btnRefresh.MouseLeave += (s, e) =>
-            {
-                btnRefresh.BackColor = Color.White;
-            };
+            btnRefresh.Click += (s, e) => LoadLabor();
 
             buttonContainer.Controls.Add(btnAdd);
             buttonContainer.Controls.Add(btnRefresh);
+
             actionPanel.Controls.Add(lblActions);
             actionPanel.Controls.Add(buttonContainer);
 
@@ -299,13 +267,14 @@ namespace MaqboolFashion.Presentation.Forms
 
             contentPanel.Controls.Add(searchPanel);
 
+            // Enhanced resize handling
             contentPanel.Resize += (s, e) =>
             {
                 if (searchPanel != null && mainContainer != null && actionPanel != null)
                 {
                     searchPanel.Width = contentPanel.Width - 60;
                     mainContainer.Width = searchPanel.Width - 40;
-                    actionPanel.Location = new Point(mainContainer.Width - 300, 10);
+                    actionPanel.Location = new Point(mainContainer.Width - 300, 5);
                 }
             };
         }
@@ -349,6 +318,7 @@ namespace MaqboolFashion.Presentation.Forms
                 EnableHeadersVisualStyles = false
             };
 
+            // Header style
             laborGrid.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.Black,
@@ -360,6 +330,7 @@ namespace MaqboolFashion.Presentation.Forms
                 SelectionForeColor = Color.White
             };
 
+            // Default cell style
             laborGrid.DefaultCellStyle = new DataGridViewCellStyle
             {
                 BackColor = Color.White,
@@ -371,8 +342,10 @@ namespace MaqboolFashion.Presentation.Forms
                 Alignment = DataGridViewContentAlignment.MiddleLeft
             };
 
+            // Remove alternating row style
             laborGrid.AlternatingRowsDefaultCellStyle = laborGrid.DefaultCellStyle;
 
+            // Add columns
             laborGrid.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Id",
@@ -422,29 +395,40 @@ namespace MaqboolFashion.Presentation.Forms
                 Name = "CNIC",
                 HeaderText = "CNIC",
                 DataPropertyName = "CNIC",
-                FillWeight = 13,
+                FillWeight = 15,
                 MinimumWidth = 130
             });
 
             laborGrid.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "Caste",
-                HeaderText = "Caste",
-                DataPropertyName = "Caste",
+                Name = "Cost",
+                HeaderText = "Daily Cost",
+                DataPropertyName = "Cost",
                 FillWeight = 10,
-                MinimumWidth = 80
+                MinimumWidth = 80,
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Format = "C0",
+                    Alignment = DataGridViewContentAlignment.MiddleRight,
+                    BackColor = Color.White,
+                    ForeColor = Color.Black,
+                    SelectionBackColor = Color.FromArgb(230, 230, 230),
+                    SelectionForeColor = Color.Black,
+                    Font = new Font("Segoe UI", 10),
+                    Padding = new Padding(10, 6, 10, 6)
+                }
             });
 
             laborGrid.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "Cost",
-                HeaderText = "Cost (Rs.)",
-                DataPropertyName = "Cost",
-                FillWeight = 10,
-                MinimumWidth = 90,
+                Name = "CurrentAdvance",
+                HeaderText = "Current Advance",
+                DataPropertyName = "CurrentAdvance",
+                FillWeight = 12,
+                MinimumWidth = 100,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
-                    Format = "N0",
+                    Format = "C0",
                     Alignment = DataGridViewContentAlignment.MiddleRight,
                     BackColor = Color.White,
                     ForeColor = Color.Black,
@@ -461,31 +445,11 @@ namespace MaqboolFashion.Presentation.Forms
                 HeaderText = "Joining Date",
                 DataPropertyName = "JoiningDate",
                 FillWeight = 12,
-                MinimumWidth = 110,
+                MinimumWidth = 100,
                 DefaultCellStyle = new DataGridViewCellStyle
                 {
                     Format = "dd/MM/yyyy",
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    BackColor = Color.White,
-                    ForeColor = Color.Black,
-                    SelectionBackColor = Color.FromArgb(230, 230, 230),
-                    SelectionForeColor = Color.Black,
-                    Font = new Font("Segoe UI", 10),
-                    Padding = new Padding(10, 6, 10, 6)
-                }
-            });
-
-            laborGrid.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "CurrentAdvance",
-                HeaderText = "Advance (Rs.)",
-                DataPropertyName = "CurrentAdvance",
-                FillWeight = 10,
-                MinimumWidth = 100,
-                DefaultCellStyle = new DataGridViewCellStyle
-                {
-                    Format = "N0",
-                    Alignment = DataGridViewContentAlignment.MiddleRight,
                     BackColor = Color.White,
                     ForeColor = Color.Black,
                     SelectionBackColor = Color.FromArgb(230, 230, 230),
@@ -511,7 +475,7 @@ namespace MaqboolFashion.Presentation.Forms
                     SelectionForeColor = Color.White,
                     Font = new Font("Segoe UI", 9, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    Padding = new Padding(3)
+                    Padding = new Padding(5)
                 }
             };
 
@@ -531,17 +495,19 @@ namespace MaqboolFashion.Presentation.Forms
                     SelectionForeColor = Color.White,
                     Font = new Font("Segoe UI", 9, FontStyle.Bold),
                     Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    Padding = new Padding(3)
+                    Padding = new Padding(5)
                 }
             };
 
             laborGrid.Columns.Add(editColumn);
             laborGrid.Columns.Add(deleteColumn);
 
+            // Ensure consistent styling for all columns
             foreach (DataGridViewColumn column in laborGrid.Columns)
             {
                 if (column.Name != "Edit" && column.Name != "Delete" &&
-                    column.Name != "JoiningDate" && column.Name != "Cost" && column.Name != "CurrentAdvance")
+                    column.Name != "Cost" && column.Name != "CurrentAdvance" &&
+                    column.Name != "JoiningDate")
                 {
                     column.DefaultCellStyle = new DataGridViewCellStyle
                     {
@@ -558,13 +524,14 @@ namespace MaqboolFashion.Presentation.Forms
 
             laborGrid.CellClick += LaborGrid_CellClick;
 
+            // Force consistent row styling
             laborGrid.RowsAdded += (s, e) =>
             {
                 for (int i = e.RowIndex; i < e.RowIndex + e.RowCount; i++)
                 {
                     if (i < laborGrid.Rows.Count)
                     {
-                        DataGridViewRow row = laborGrid.Rows[i];
+                        var row = laborGrid.Rows[i];
                         row.DefaultCellStyle = new DataGridViewCellStyle
                         {
                             BackColor = Color.White,
@@ -595,7 +562,7 @@ namespace MaqboolFashion.Presentation.Forms
         private void CreatePagination(Panel contentPanel)
         {
             pagination = new PaginationComponent();
-            pagination.PageChanged += (s, page) => LoadLabors();
+            pagination.PageChanged += (s, page) => LoadLabor();
             contentPanel.Controls.Add(pagination);
 
             contentPanel.Resize += (s, e) =>
@@ -608,7 +575,7 @@ namespace MaqboolFashion.Presentation.Forms
             };
         }
 
-        private void LoadLabors()
+        private void LoadLabor()
         {
             try
             {
@@ -616,34 +583,33 @@ namespace MaqboolFashion.Presentation.Forms
                 var currentPage = pagination?.CurrentPage ?? 1;
                 var pageSize = pagination?.PageSize ?? 10;
 
-                var labors = laborService.GetLabors(currentPage, pageSize, searchTerm);
-                var totalCount = laborService.GetTotalLaborsCount(searchTerm);
+                var laborList = laborService.GetLabor(currentPage, pageSize, searchTerm);
+                var totalCount = laborService.GetTotalLaborCount(searchTerm);
 
-                laborGrid.DataSource = labors.Select(l => new
+                laborGrid.DataSource = laborList.Select(l => new
                 {
                     Id = l.Id,
                     Name = l.Name,
                     Area = l.Area,
                     City = l.City,
-                    PhoneNumber = l.PhoneNumber,
-                    CNIC = l.CNIC,
-                    Caste = l.Caste,
+                    PhoneNumber = LaborService.FormatPhoneNumber(l.PhoneNumber),
+                    CNIC = LaborService.FormatCNIC(l.CNIC),
                     Cost = l.Cost,
-                    JoiningDate = l.JoiningDate,
-                    CurrentAdvance = l.CurrentAdvance
+                    CurrentAdvance = l.CurrentAdvance,
+                    JoiningDate = l.JoiningDate
                 }).ToList();
 
                 pagination.UpdatePagination(totalCount, currentPage, pageSize);
-                totalLaborsLabel.Text = $"Total Workers: {totalCount}";
+                totalLaborLabel.Text = $"Total Labor: {totalCount}";
 
-                if (labors.Count == 0 && !string.IsNullOrEmpty(searchTerm))
+                if (laborList.Count == 0 && !string.IsNullOrEmpty(searchTerm))
                 {
-                    totalLaborsLabel.Text = $"No workers found for '{searchTerm}'";
+                    totalLaborLabel.Text = $"No labor found for '{searchTerm}'";
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading labors: {ex.Message}", "Error",
+                MessageBox.Show($"Error loading labor: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -669,7 +635,7 @@ namespace MaqboolFashion.Presentation.Forms
             var dialog = new LaborFormDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                LoadLabors();
+                LoadLabor();
             }
         }
 
@@ -683,17 +649,17 @@ namespace MaqboolFashion.Presentation.Forms
                     var dialog = new LaborFormDialog(labor);
                     if (dialog.ShowDialog() == DialogResult.OK)
                     {
-                        LoadLabors();
+                        LoadLabor();
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Worker not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Labor not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading worker: {ex.Message}", "Error",
+                MessageBox.Show($"Error loading labor: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -705,12 +671,12 @@ namespace MaqboolFashion.Presentation.Forms
                 var labor = laborService.GetLaborById(laborId);
                 if (labor == null)
                 {
-                    MessageBox.Show("Worker not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Labor not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 var result = MessageBox.Show(
-                    $"Are you sure you want to delete worker '{labor.Name}'?\n\nThis action cannot be undone.",
+                    $"Are you sure you want to delete '{labor.Name}'?\n\nThis action cannot be undone and will affect all related advance and payment records.",
                     "Confirm Delete",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
@@ -719,20 +685,20 @@ namespace MaqboolFashion.Presentation.Forms
                 {
                     if (laborService.DeleteLabor(laborId))
                     {
-                        MessageBox.Show("Worker deleted successfully!", "Success",
+                        MessageBox.Show("Labor deleted successfully!", "Success",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadLabors();
+                        LoadLabor();
                     }
                     else
                     {
-                        MessageBox.Show("Failed to delete worker.", "Error",
+                        MessageBox.Show("Failed to delete labor.", "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error deleting worker: {ex.Message}", "Error",
+                MessageBox.Show($"Error deleting labor: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
