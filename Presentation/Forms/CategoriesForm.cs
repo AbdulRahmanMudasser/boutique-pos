@@ -208,7 +208,7 @@ namespace MaqboolFashion.Presentation.Forms
 
             var lblActions = new Label
             {
-                Text = "⚙️ Actions",
+                Text = "Actions",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 ForeColor = Color.Black,
                 AutoSize = true,
